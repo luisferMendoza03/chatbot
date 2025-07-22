@@ -6,7 +6,6 @@ from sentence_transformers import SentenceTransformer, util
 import numpy as np
 import os # Importar os para obtener la ruta del directorio actual
 from flask_cors import CORS
-import mysql.connector
 
 app = Flask(__name__)
 CORS(app)
