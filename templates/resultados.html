@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Resultados de Búsqueda</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
+    <link rel="icon" href="/static/imgs/logo.png">
+</head>
+
+<body>
+    <style>
+        body {
+            font-family: system-ui;
+            background-image: url(/static/imgs/fondo.jpg);
+            background-size: 100% 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            font-size: 40px;
+        }
+
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+            margin-left: 90px;
+        }
+
+        .product-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            height: 350px;
+            box-sizing: border-box;
+            padding: 15px;
+            transition: transform 0.2s;
+        }
+
+        .product-card:hover {
+            transform: scale(1.02);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 100%;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            object-fit: cover;
+            max-height: 200px;
+        }
+
+        .product-card p {
+            margin: 0;
+            color: 191919;
+            font-size: 14px;
+        }
+
+        .product-card strong {
+            font-size: 16px;
+            color: 0a0a0a;
+        }
+
+        @media (max-width: 768px) {
+            .product-card {
+                width: calc(50% - 20px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .product-card {
+                width: 100%;
+            }
+        }
+    </style>
+
+
+    <h2>Resultados de búsqueda para: <em>{{ consulta }}</em></h2>
+    <div class="product-list">
+        {% if resultados %}
+        {% for fila in resultados %}
+        <div class="product-card" data-category="{{ fila.nombre.lower() }}">
+            <img src="{{ fila.imagen }}" alt="{{ fila.nombre }}">
+            <p><strong>{{ fila.nombre }}</strong><br>Marca: {{ fila.marca }}</p>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>No se encontraron resultados.</p>
+        {% endif %}
+    </div>
+    <script src="/static/app.js" defer></script>
+</body>
+
+</html>

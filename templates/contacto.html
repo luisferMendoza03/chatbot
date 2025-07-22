@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto ALCADI</title>
+    <link rel="stylesheet" href="/static/estilos.css">
+    <link rel="icon" href="/static/imgs/logo.png">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="{{ url_for('index') }}">
+                <img src="/static/imgs/logo.PNG" alt="ALCADI TRADE DISTRIBUTION S.A. de C.V">
+            </a>   
+        </div>
+        
+        <nav>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}">Inicio</a></li>
+                <li><a href="{{ url_for('nosotros') }}">Sobre nosotros</a></li>
+                <li><a href="#carousel-container">Marcas</a></li>
+            </ul>
+        </nav>
+
+        <a href="{{ url_for('contacto') }}" class="btn-contact"><button>Contáctanos</button></a>
+
+        <form action="buscar.php" class="bar-search">
+            <input type="search" placeholder="Buscar..." name="buscar">
+            <button type="submit"><img src="{{ url_for('static', filename='imgs/search.svg') }}" alt=""></button>
+        </form>
+        <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div>
+        <script>
+            function toggleMenu() {
+            document.querySelector('nav').classList.toggle('active');
+            }
+        </script>
+    </header>
+    
+    <div class="contacto-container">
+        <h1>Queremos ayudarte</h1>
+        <p>¡Contáctanos!<br>Aquí te ayudaremos a resolver más rápido tus solicitudes.</p>
+    </div>
+
+    <div class="info-contacto">
+        <div class="caja">
+            <a href="https://maps.app.goo.gl/opmEi8gtqCwXZvmg7" target="_blank">Montes Cárpatos 274 Tláhuac, Ciudad de México</a><br>C.P: 13420
+        </div>
+        <div class="caja">
+            Tel. Directo:<br><a href="https://wa.me/525510905722" target="_blank">55-1090-5722</a><br><a href="https://wa.me/525519029501" target="_blank">55-1902-9501</a>
+        </div>
+        <div class="caja">
+            Tel. Oficina:<br>55-2127-7677<br>55-5886-8403<br>55-5859-5544
+        </div>
+        <div class="caja">
+            Perfil de Facebook:<br><a href="https://www.facebook.com/share/19Aa591CSg/" target="_blank">Alcadi Trade Distribution</a>
+        </div>
+        <div class="caja">
+            Correo electrónico:<br><a href="mailto:ventas@alcaditrade.com.mx" target="_blank">ventas@alcaditrade.com.mx</a>
+        </div>
+    </div>
+
+    <div id="carousel-container">
+        <p>ALCADI TRADE DISTRIBUTION S.A. de C.V<br>Conoce nuestras marcas </p>
+        <div class="carousel">
+           <img src="{{ url_for('static', filename='logos/ABB.png') }}" alt="Logotipo 1" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/bticino.jpg') }}" alt="Logotipo 2" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/himel.png') }}" alt="Logotipo 3" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/Eaton.png') }}" alt="Logotipo 4" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/Schneider.png') }}" alt="Logotipo 5" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/Estevez.png') }}" alt="Logotipo 6" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/arrow.png') }}" alt="Logotipo 7" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/WEG.png') }}" alt="Logotipo 8" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/anclo.png') }}" alt="Logotipo 9" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/royer.png') }}" alt="Logotipo 10" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/LEVITON.png') }}" alt="Logotipo 11" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/igesa.png') }}" alt="Logotipo 12" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/Simon.png') }}" alt="Logotipo 13" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/nitto.png') }}" alt="Logotipo 14" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/rAWELT.png') }}" alt="Logotipo 15" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/Tork.png') }}" alt="Logotipo 16" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/argos.png') }}" alt="Logotipo 17" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/Condumex.png') }}" alt="Logotipo 18" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/viakon.png') }}" alt="Logotipo 19" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/condulac.png') }}" alt="Logotipo 20" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/iusa.png') }}" alt="Logotipo 21" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/arsa.png') }}" alt="Logotipo 22" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/belden.png') }}" alt="Logotipo 23" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/condelmex.png') }}" alt="Logotipo 24" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/omega.png') }}" alt="Logotipo 25" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/deplayusa.png') }}" alt="Logotipo 26" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/tmf.jpg') }}" alt="Logotipo 27" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/poliflex.png') }}" alt="Logotipo 28" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/kobrex.png') }}" alt="Logotipo 29" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/jupiter.png') }}" alt="Logotipo 30" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/catusa.png') }}" alt="Logotipo 31" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/rymco.png') }}" alt="Logotipo 32" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/tecnolite.png') }}" alt="Logotipo 33" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/cooper.png') }}" alt="Logotipo 34" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/magg.png') }}" alt="Logotipo 35" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/megamex.png') }}" alt="Logotipo 36" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/elastimold.jpg') }}" alt="Logotipo 37" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/burndy.png') }}" alt="Logotipo 38" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/3m.png') }}" alt="Logotipo 39" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/telemecanique.png') }}" alt="Logotipo 40" class="carousel-item">
+        </div>
+    </div>
+
+
+
+    <footer class="footer">
+        <ul class="social-icon">
+            <li class="icon-elem">
+                <a href="https://www.facebook.com/share/19Aa591CSg/" target="_blank" class="icon">
+                    <ion-icon name="logo-facebook"></ion-icon>
+                </a>
+            </li>
+            <li class="icon-elem">
+                <a href="https://wa.me/525519029501" target="_blank" class="icon">
+                    <ion-icon name="logo-whatsapp"></ion-icon>
+                </a>
+            </li>
+            <li class="icon-elem">
+                <a href="mailto:ventas@alcaditrade.com.mx" target="_blank" class="icon">
+                    <ion-icon name="mail-outline"></ion-icon>
+                </a>
+            </li>
+        </ul>
+
+        <ul class="menu">
+            <li class="menu-elem">
+                <a href="{{ url_for('index') }}" class="menu-icon">Inicio</a>
+            </li>
+            <li class="menu-elem">
+                <a href="{{ url_for('nosotros') }}" class="menu-icon">Acerca de nosotros</a>
+            </li>
+            <li class="menu-elem">
+                <a href="https://maps.app.goo.gl/opmEi8gtqCwXZvmg7" target="_blank" class="menu-icon">Ubicación</a>
+            </li>
+        </ul>
+        
+        <p class="text">&copy; <span id="current-year"></span> &nbsp;&nbsp; Todos los derechos reservados.</p>
+    </footer>
+
+    <button id="scrollToTopBtn" onclick="scrollToTop()">&#8593;</button>
+    
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

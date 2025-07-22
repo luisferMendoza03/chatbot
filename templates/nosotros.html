@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre nosotros ALCADI</title>
+    <link rel="stylesheet" href="/static/estilos.css">
+    <link rel="icon" href="/static/imgs/logo.png">
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="{{ url_for('index') }}">
+                <img src="/static/imgs/logo.PNG" alt="ALCADI TRADE DISTRIBUTION S.A. de C.V">
+            </a>
+        </div>
+
+        <nav>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}">Inicio</a></li>
+                <li><a href="{{ url_for('nosotros') }}">Sobre nosotros</a></li>
+                <li><a href="#carousel-container">Marcas</a></li>
+            </ul>
+        </nav>
+
+        <a href="{{ url_for('contacto') }}" class="btn-contact"><button>Contáctanos</button></a>
+
+        <form action="buscar.php" class="bar-search">
+            <input type="search" placeholder="Buscar..." name="buscar">
+            <button type="submit"><img src="{{ url_for('static', filename='imgs/search.svg') }}" alt=""></button>
+        </form>
+
+        <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div>
+
+        <script>
+            function toggleMenu() {
+                document.querySelector('nav').classList.toggle('active');
+            }
+        </script>
+
+    </header>
+
+
+    <div class="mision-container">
+        <section class="mision">
+            <p>Misión<br><br>Ser una empresa con presencia, posicionamiento y proyección exitosa global, que le
+                solucione al
+                cliente sus necesidades de material eléctrico e iluminación, siendo reconocida como la primera
+                opción en la mente del consumidor por ser creadora de valor a través del servicio.
+            </p>
+        </section>
+    </div>
+    <div class="vision-container">
+        <section class="vision">
+            <p>
+                Visión<br><br>Ser una empresa comercializadora de material eléctrico e iluminación a través de un
+                servicio de
+                ventas personalizado, al mejor precio del mercado, dirigido a electricistas, constructores,
+                instaladores, contratistas, diseñadores y público en general, apoyado en un equipo de trabajo
+            </p>
+        </section>
+    </div>
+    <div class="distingue-container">
+        <section class="distingue">
+            <p>
+                ¿Qué nos distigue?<br><br>
+                Nos diferenciamos por el estilo y calidad de los proyectos de decoración, dotando de la seriedad y la
+                creatividad del grupo de profesionales que lo integran. Dar soporte a arquitectos, decoradores,
+                interioristas, arquitectos técnicos y de todos nuestros productos y soluciones constructivas.
+            </p>
+        </section>
+    </div>
+    <div class="areas-container">
+        <section class="areas">
+            <p>Nuestras principales áreas de actuación son:</p><br>
+            <ul>
+                <li>Estudio, diseño y valoración de proyectos.</li>
+                <li>Adecuación de espacios de negocios.</li>
+                <li>Cadenas y locales comerciales.</li>
+                <li>Despachos y oficinas.</li>
+                <li>Centros de atención al público.</li>
+                <li>Residencias y viviendas particulares.</li>
+                <li>Rehabilitaciones.</li>
+                <li>Mantenimiento y Reparaciones.</li>
+            </ul>
+        </section>
+    </div>
+
+    <div id="carousel-container">
+        <p>ALCADI TRADE DISTRIBUTION S.A. de C.V<br>Conoce nuestras marcas </p>
+        <div class="carousel">
+            <img src="{{ url_for('static', filename='logos/ABB.png') }}" alt="Logotipo 1" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/bticino.jpg') }}" alt="Logotipo 2" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/himel.png') }}" alt="Logotipo 3" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/Eaton.png') }}" alt="Logotipo 4" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/Schneider.png') }}" alt="Logotipo 5" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/Estevez.png') }}" alt="Logotipo 6" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/arrow.png') }}" alt="Logotipo 7" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/WEG.png') }}" alt="Logotipo 8" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/anclo.png') }}" alt="Logotipo 9" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/royer.png') }}" alt="Logotipo 10" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/LEVITON.png') }}" alt="Logotipo 11" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/igesa.png') }}" alt="Logotipo 12" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/Simon.png') }}" alt="Logotipo 13" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/nitto.png') }}" alt="Logotipo 14" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/rAWELT.png') }}" alt="Logotipo 15" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/Tork.png') }}" alt="Logotipo 16" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/argos.png') }}" alt="Logotipo 17" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/Condumex.png') }}" alt="Logotipo 18" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/viakon.png') }}" alt="Logotipo 19" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/condulac.png') }}" alt="Logotipo 20" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/iusa.png') }}" alt="Logotipo 21" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/arsa.png') }}" alt="Logotipo 22" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/belden.png') }}" alt="Logotipo 23" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/condelmex.png') }}" alt="Logotipo 24" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/omega.png') }}" alt="Logotipo 25" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/deplayusa.png') }}" alt="Logotipo 26" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/tmf.jpg') }}" alt="Logotipo 27" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/poliflex.png') }}" alt="Logotipo 28" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/kobrex.png') }}" alt="Logotipo 29" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/jupiter.png') }}" alt="Logotipo 30" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/catusa.png') }}" alt="Logotipo 31" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/rymco.png') }}" alt="Logotipo 32" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/tecnolite.png') }}" alt="Logotipo 33" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/cooper.png') }}" alt="Logotipo 34" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/magg.png') }}" alt="Logotipo 35" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/megamex.png') }}" alt="Logotipo 36" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/elastimold.jpg') }}" alt="Logotipo 37" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/burndy.png') }}" alt="Logotipo 38" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/3m.png') }}" alt="Logotipo 39" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/telemecanique.png') }}" alt="Logotipo 40"
+                class="carousel-item">
+        </div>
+    </div>
+
+    <footer class="footer">
+        <ul class="social-icon">
+            <li class="icon-elem">
+                <a href="https://www.facebook.com/share/19Aa591CSg/" target="_blank" class="icon">
+                    <ion-icon name="logo-facebook"></ion-icon>
+                </a>
+            </li>
+            <li class="icon-elem">
+                <a href="https://wa.me/525519029501" target="_blank" class="icon">
+                    <ion-icon name="logo-whatsapp"></ion-icon>
+                </a>
+            </li>
+            <li class="icon-elem">
+                <a href="mailto:ventas@alcaditrade.com.mx" target="_blank" class="icon">
+                    <ion-icon name="mail-outline"></ion-icon>
+                </a>
+            </li>
+        </ul>
+
+        <ul class="menu">
+            <li class="menu-elem">
+                <a href="{{ url_for('index') }}" class="menu-icon">Inicio</a>
+            </li>
+            <li class="menu-elem">
+                <a href="{{ url_for('nosotros') }}" class="menu-icon">Acerca de nosotros</a>
+            </li>
+            <li class="menu-elem">
+                <a href="https://maps.app.goo.gl/opmEi8gtqCwXZvmg7" target="_blank" class="menu-icon">Ubicación</a>
+            </li>
+        </ul>
+
+        <p class="text">&copy; <span id="current-year"></span> &nbsp;&nbsp; Todos los derechos reservados.</p>
+
+        <button id="scrollToTopBtn" onclick="scrollToTop()">&#8593;</button>
+    </footer>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

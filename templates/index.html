@@ -1,0 +1,1881 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALCADI TRADE DISTRIBUTION</title>
+    <link rel="stylesheet" href="/static/estilos.css">
+    <link rel="icon" href="/static/imgs/logo.png">
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="{{ url_for('index') }}">
+                <img src="/static/imgs/logo.PNG" alt="ALCADI TRADE DISTRIBUTION S.A. de C.V">
+            </a>
+        </div>
+
+        <nav>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}">Inicio</a></li>
+                <li><a href="{{ url_for('nosotros') }}">Sobre nosotros</a></li>
+                <li><a href="#carousel-container">Marcas</a></li>
+            </ul>
+        </nav>
+
+        <a href="{{ url_for('contacto') }}" class="btn-contact"><button>Contáctanos</button></a>
+
+        <form action="{{ url_for('buscar') }}" class="bar-search" method="GET">
+            <input type="search" placeholder="Buscar..." name="buscar" required>
+            <button type="submit"><img src="{{ url_for('static', filename='imgs/search.svg') }}"></button>
+        </form>
+        <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div>
+
+        <script>
+            function toggleMenu() {
+                document.querySelector('nav').classList.toggle('active');
+            }
+        </script>
+    </header>
+
+    <div class="carrusel-container">
+        <button class="btn-anterior" onclick="cambiarImagen(-1)">&#10094;</button>
+
+        <div class="carrusel">
+            <img src="{{ url_for('static', filename='imgs/captura5.PNG') }}" alt="Imagen 1" class="carrusel-imagen">
+            <img src="{{ url_for('static', filename='/imgs/veracruz1.jpeg') }}" alt="imagen13" class="carrusel-imagen">
+            <img src="{{ url_for('static', filename='/imgs/Captura12.PNG') }}" alt="Imagen 3" class="carrusel-imagen">
+            <img src="{{ url_for('static', filename='/imgs/veracruz2.jpeg') }} " alt="imagen13" class="carrusel-imagen">
+            <img src="{{ url_for('static', filename='/imgs/Captura2.PNG') }} " alt="Imagen 4" class="carrusel-imagen">
+            <img src="{{ url_for('static', filename='/imgs/Captura13.PNG') }}" alt="Imagen 5" class="carrusel-imagen">
+            <img src="{{ url_for('static', filename='imgs/veracruz3.jpeg') }}" alt="imagen13" class="carrusel-imagen">
+            <img src="{{ url_for('static', filename='imgs/Captura1.PNG') }}" alt="Imagen 2" class="carrusel-imagen">
+            <img src="{{ url_for('static', filename='imgs/Captura3.PNG') }}" alt="Imagen 6" class="carrusel-imagen">
+            <img src="{{ url_for('static', filename='imgs/Captura14.PNG') }}" alt="Imagen 7" class="carrusel-imagen">
+            <img src="{{ url_for('static', filename='imgs/Captura4.PNG') }}" alt="Imagen 8" class="carrusel-imagen">
+            <img src="{{ url_for('static', filename='imgs/Captura15.PNG') }}" alt="Imagen 9" class="carrusel-imagen">
+            <img src="{{ url_for('static', filename='imgs/Captura16.PNG') }}" alt="Imagen 10" class="carrusel-imagen">
+            <img src="{{ url_for('static', filename='imgs/Captura18.PNG') }}" alt="Imagen 11" class="carrusel-imagen">
+            <img src="{{ url_for('static', filename='imgs/Captura17.PNG') }}" alt="Imagen 12" class="carrusel-imagen">
+        </div>
+
+        <button class="btn-siguiente" onclick="cambiarImagen(1)">&#10095;</button>
+    </div>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>Asistente ALCADI</h2>
+            <button id="minimize-btn" class="chatbot-btn">x</button>
+        </div>
+        <div class="chat-box" id="chat-box"></div>
+        <div class="chat-input">
+            <input type="text" id="user-input" placeholder="Escribe tu mensaje..." autofocus>
+            <button id="send-button">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatBox = document.getElementById('chat-box');
+            const userInput = document.getElementById('user-input');
+            const sendButton = document.getElementById('send-button');
+
+            // Función para agregar un mensaje al chat
+            function addMessage(sender, message) {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message');
+                if (sender === 'user') {
+                    messageElement.classList.add('user-message');
+                } else {
+                    messageElement.classList.add('bot-message');
+                }
+                messageElement.textContent = message;
+                chatBox.appendChild(messageElement);
+                chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll al último mensaje
+            }
+
+            // Función para enviar el mensaje al backend y obtener la respuesta
+            async function sendMessage() {
+                const message = userInput.value.trim();
+                if (message === '') return;
+
+                addMessage('user', message);
+                userInput.value = ''; // Limpiar el input
+
+                try {
+                    const response = await fetch('/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ message: message })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Error HTTP: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    addMessage('bot', data.response);
+                } catch (error) {
+                    console.error('Error al enviar mensaje:', error);
+                    addMessage('bot', 'Lo siento, hubo un error al procesar tu solicitud.');
+                }
+            }
+
+            // Event listeners
+            sendButton.addEventListener('click', sendMessage);
+
+            userInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            // Mensaje de bienvenida inicial del bot
+            addMessage('bot', '¡Hola! Soy tu asistente. ¿En qué puedo ayudarte hoy?');
+        });
+
+        //codigo para minimizar el chatbot 
+        // Espera a que el DOM esté cargado
+        document.addEventListener("DOMContentLoaded", function () {
+            const minimizeBtn = document.getElementById("minimize-btn");
+            const chatContainer = document.querySelector(".chat-container");
+
+            minimizeBtn.addEventListener("click", function () {
+                chatContainer.classList.toggle("minimized");
+
+                // Cambia el texto del botón (opcional)
+                if (chatContainer.classList.contains("minimized")) {
+                    minimizeBtn.textContent = "⬆"; // o cualquier ícono para "expandir"
+                } else {
+                    minimizeBtn.textContent = "x"; // o el ícono para "cerrar"
+                }
+            });
+        });
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.querySelector('.chat-container').classList.add('visible');
+            }, 2000); //2 segundos
+        });
+
+    </script>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.querySelector('.chat-container').classList.add('visible');
+            }, 2000);
+        });
+    </script>
+
+
+    <div class="wrap">
+        <h1>Nuestros productos</h1>
+        <div class="store-wrapper">
+            <div class="category-list">
+                <button onclick="filterProducts('all')" class="category-item">Todos</button>
+                <button onclick="filterProducts('auto-y-control')" class="category-item">Automatización y
+                    control</button>
+                <button onclick="filterProducts('tube-poli')" class="category-item">Tubería y poliducto</button>
+                <button onclick="filterProducts('iluminacion')" class="category-item">Iluminación</button>
+                <button onclick="filterProducts('accesorios')" class="category-item">Accesorios</button>
+                <button onclick="filterProducts('conductores')" class="category-item">Conductores</button>
+                <button onclick="filterProducts('baja-media-ten')" class="category-item">Baja y media tensión</button>
+            </div>
+            <section class="products-list">
+                <div class="product-item" data-category="baja-media-ten">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/cable thw.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Cable THW calibres 14,16,12<br>CONDUMEX</a>
+                </div>
+                <div class="product-item" data-category="baja-media-ten">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/utp5.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Cable UTP cat-5<br>LEVITON</a>
+                </div>
+                <div class="product-item" data-category="baja-media-ten">
+                    <img src="{{ url_for('static', filename='conductores/usorudo2.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable uso rudo ST 2 líneas rollo/metro varios calibres<br>ARGOS</a>
+                </div>
+                <div class="product-item" data-category="baja-media-ten">
+                    <img src="{{ url_for('static', filename='conductores/usorudo3.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable uso rudo ST 4 líneas rollo/metro varios calibres<br>ARGOS</a>
+                </div>
+                <div class="product-item" data-category="baja-media-ten">
+                    <img src="{{ url_for('static', filename='conductores/duplex.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable duplex STP blanco rollo/metro varios calibres<br>ARGOS</a>
+                </div>
+                <div class="product-item" data-category="baja-media-ten">
+                    <img src="{{ url_for('static', filename='conductores/thwneg.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable THW-LS negro rollo/metro varios calibres<br>ARGOS</a>
+                </div>
+                <div class="product-item" data-category="baja-media-ten">
+                    <img src="{{ url_for('static', filename='conductores/thwver.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable THW-2-LS verde rollo/metro varios calibres<br>VIAKON</a>
+                </div>
+                <div class="product-item" data-category="baja-media-ten">
+                    <img src="{{ url_for('static', filename='conductores/thwneg.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable THW-2-LS negro rollo/metro varios calibres<br>VIAKON</a>
+                </div>
+                <div class="product-item" data-category="baja-media-ten">
+                    <img src="{{ url_for('static', filename='conductores/thwblan.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable THW-2-LS blanco rollo/metro varios calibres<br>VIAKON</a>
+                </div>
+                <div class="product-item" data-category="baja-media-ten">
+                    <img src="{{ url_for('static', filename='conductores/thwrojo.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable THW-2-LS rojo rollo/metro varios calibres<br>VIAKON</a>
+                </div>
+                <div class="product-item" data-category="baja-media-ten">
+                    <img src="{{ url_for('static', filename='conductores/thwazul.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable THW-2-LS azul rollo/metro varios calibres<br>VIAKON</a>
+                </div>
+                <div class="product-item" data-category="baja-media-ten">
+                    <img src="{{ url_for('static', filename='conductores/thwblan.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable THW-LS blanco rollo/metro varios calibres<br>ARGOS</a>
+                </div>
+                <div class="product-item" data-category="baja-media-ten">
+                    <img src="{{ url_for('static', filename='conductores/thwver.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable THW-LS verde rollo/metro varios calibres<br>ARGOS</a>
+                </div>
+                <div class="product-item" data-category="baja-media-ten">
+                    <img src="{{ url_for('static', filename='conductores/thwrojo.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable THW-LS rojo rollo/metro varios calibres<br>ARGOS</a>
+                </div>
+                <div class="product-item" data-category="baja-media-ten">
+                    <img src="{{ url_for('static', filename='conductores/thwazul.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable THW-LS azul rollo/metro varios calibres<br>ARGOS</a>
+                </div>
+                <div class="product-item" data-category="baja-media-ten">
+                    <img src="{{ url_for('static', filename='conductores/usorudo.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable uso rudo ST 3 líneas rollo/metro varios calibres<br>ARGOS</a>
+                </div>
+                <div class="product-item" data-category="baja-media-ten">
+                    <img src="{{ url_for('static', filename='conductores/desnudo.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable de cobre desnudo rollo/metro varios calibres<br>KOBREX</a>
+                </div>
+                <div class="product-item" data-category="baja-media-ten">
+                    <img src="{{ url_for('static', filename='conductores/cobredesnudo.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Alambre de cobre desnudo<br>KOBREX</a>
+                </div>
+                <div class="product-item" data-category="baja-media-ten">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/coaxial.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Cable coaxial RGE-06 77% rollo/metro<br>CABLETECH</a>
+                </div>
+                <div class="product-item" data-category="baja-media-ten">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/icev3.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Cordon ICEV-3 (SLD) MARFIL<br>CONDUMEX</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_130346.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Contratuerca metálica 32mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_130455.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Contratuerca metálica 25mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_130838.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Contratuerca metálica 38mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_131620.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Conector flexible recto 9.5mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_131737.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Abrazadera 3/4"<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_131908.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Conector flexible recto 51mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_132103.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Uña tubo pared gruesa 13mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_132324.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Colgador tipo Pera 1/2"<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_132715.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Colgador tipo Pera 51mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_132822.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Colgador tipo Pera 101mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_133023.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Monitor metálico 2"<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_133118.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Rondana plana galvanizada 6.5mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_133220.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Cople pared delgada 51mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_133316.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Cople pared delgada 19mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_133615.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Monitor metálico 2 1/2"<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_131051.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Monitor metálico 13mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_133728.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Conector uso rudo 19mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_133957.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Conector pared delgada 51mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_134051.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Conector pared delgada 25mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_134311.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Conector pared delgada 13mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_134209.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Conector pared delgada 19mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_134412.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Clip para Conduit 13mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_134517.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Clip para Conduit 25mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_134622.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Clip para Conduit 32mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_134747.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Clip para Conduit 38mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_134926.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Arpon 12.7mm x 114.3mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_135058.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Mordaza acero fija galvanizada 19mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_135202.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Abrazadera unicanal Conduit 75mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_135237.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Taquete sujetador tipo mariposa<br>TRUPER</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_135446.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Abrazadera unicanal para tubo PVC 32mm<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_141920.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Conector pesado 3/4" PVC<br>RYMCO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_142319.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Codo para Conduit galvanizado<br>OMEGA</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_142620.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Adaptador de PVC macho<br>RYMCO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_143742.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Mufa con abrazadera<br>RYMCO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250304_111835.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Reducción bushing (diferentes tamaños)<br>ARGOS</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/cincho.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Base para cinchos adhesivo<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250228_143414.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Zapata ojillo cobre 1/2" p/planta<br>BURNDY</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250228_143503.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Zapata espada cal.10-12 3/16"<br>ARGOS</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250228_143605.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Zapata ojillo 5/32" de cobre<br>BURNDY</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250228_143724.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Zapata faston hembra cal.10-12 1/4" amarillo<br>BURNDY</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250228_143840.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Zapata espada cal.16-14 5/32"<br>BURNDY</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250228_144023.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Zapata ojillo cal.14-16 3/16"<br>BURNDY</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250228_144204.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Zapata ojillo cal.12-10 3/16" sin aislar<br>BURNDY</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250228_144341.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Armella cerrada<br>FIERO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250228_144453.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Armella abierta<br>FIERO</a>
+                </div>
+                <div class="product-item" data-category="tube-poli">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/termo.png') }}" alt="" loading="lazy">
+                    <a href="#">Termocontractil diferentes medidas<br>3M</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250304_105436.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Zapata de cobre KS-20, KS-25<br>BURNDY</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250304_110159.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Faston hembra aislado cal.16-14<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/macho.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Faston macho aislado cal.16-14<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250304_110427.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Zapata ojillo cal.16-14 3/16"<br>BURNDY</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250304_110511.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Zapata faston cal.10-12 1/4" rojo<br>BURNDY</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250304_110548.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Zapata ojillo p/marcha 3/8"<br>BURNDY</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_121517.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario LED empotrable 7W<br>MUNDO LUCIDO S.A. DE C.V.</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_121703.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario LED empotrable 5W<br>MUNDO LUCIDO S.A. DE C.V.</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_121940.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario LED c/controlador 9W<br>DLM</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_144300.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Tira de bombillas 10V<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_144533.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara LED color rojo 2.3W<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_144702.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara halógena tipo ampolleta 20W<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_141705.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Foco LED ahorrador 14W<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_141712.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Foco LED 7W<br>SYLTECH</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_141726.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara LED luz de día empotrable<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_141805.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario LED luz de día decorativo<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_143003.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara blanca fluorescente espiral 13W<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/portalam.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Portalámpara de porcelana<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_144815.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara halógena MR16 50W<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_144931.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara de rayos ultravioleta 9W<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_145056.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Foco reflectante LED 50W<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_145149.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario para interiores 6.8W<br>PROMILIGHT</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_145332.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara de incandescencia 130V<br>LUMIACTION</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_145445.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Bombilla de tubo LED UV 9W<br>LUMIACTION</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_145558.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara LED MR16 127V<br>ARGOS</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_145729.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Foco de halógeno/filamento de tungsteno 500W<br>MITZU</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_145857.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Foco festival verde 40W<br>PHILIPS</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_145957.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Foco LED MR16 4W<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_150157.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Foco refrigerador 40W<br>YEILITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_150306.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Bombilla LED MR16 color rojo 3W<br>LMMT</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/edison.png') }}" alt="" loading="lazy">
+                    <a href="#">Foco tipo EDISON incandescente 11W<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_150648.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara de incandescencia 4.5W<br>LUMIACTION</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_150826.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara espiral blanco neutro 15W<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250227_150922.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara espiral blanco 25W<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_113932.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara LED luz de día 12W<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_114036.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Reflector LED ajustable 10w<br>VOLTECK LAIT</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_114309.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario tipo plafón LED 12W<br>VOLTECK LAIT</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_114756.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara fluorescente circular 22W<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_114938.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara fluorescente circular mini 22W<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_115125.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara LED tipo T 450W<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_115232.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara LED tipo T 350W<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_115514.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara fluorescente compacta autobalastrada 65W<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_145430.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Foco para máquina de coser<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_115642.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara fluorescente compacta autobalastrada 85W<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_120032.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara luz de día LED 14W<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_120251.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara LED tipo bulbo 7W<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_120411.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara LED tipo bulbo 5W<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_120639.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario LED empotrable 12W<br>MUNDO LUCIDO S.A. DE C.V.</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_120840.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario LED empotrable 18W<br>MUNDO LUCIDO S.A. DE C.V.</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/uv2.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Luz UV de repuesto para detector de billetes falsos<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_121316.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara fluorescente miniatura 6W<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_122215.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario LED empotrable c/controlador 9W<br>SYLTECH</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_121957.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Controlador LED<br>LEVITON</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_122536.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara luz cálida halógena 50W<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_122644.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara luz cálida halógena 75W<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_122851.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara infrarroja tipo BR40 270W<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_123134.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara luz de día LED 18W<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_123302.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara verde espiral ahorrador 10W<br>LUMIACTION</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_123535.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara fluorescente blanca 26W<br>PHILIPS</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_123805.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara luz cálida MR16 6W<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_123816.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara luz de día MR16 6W<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_124233.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara luz cálida 9W<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/suspendida.png') }}" alt="" loading="lazy">
+                    <a href="#">Luminario de interior decorativo<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_124350.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara fluorescente blanco frío 13W<br>PHILIPS</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_124806.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara fluorescente blanca forma de "U" 9W<br>OSRAM</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/fc_3220_1.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Luminario de interior plafón fluorescente 32W<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_130025.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Enchufe eléctrico de plástico 100W<br>LUMIACTION</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_130226.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara empotrable bote plafón socket<br>MAGG</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_130347.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Repuesto de lámpara fluorescente circular 22W<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_130645.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara techo satinada 50W<br>SOLARIS</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/plafon.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Luminaria fluorescente de sobreponer 34W<br>MAGG</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_131745.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Regleta luminaria dos focos halógeno 50W<br>SOLARIS</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_132102.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Regleta luminaria azul dos focos halógeno 50W<br>SOLARIS</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_132514.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminaria techo c/lámpara halógena 50W<br>SOLARIS</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_133017.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario blanco de interior empotrable 50W<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_134507.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario blanco de interior empotrable 50W<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_134803.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario negro de interior empotrable 50W<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_134916.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario blanco de interior empotrable 35W<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_135019.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario negro de interior empotrable 50W<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_135130.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario de interior de lámina de acero empotrable 35W<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_135336.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario blanco de interior empotrable 35W<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_135728.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario decorativo luz blanca c/lámpara TH-9W y balastro electrónico<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_135936.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario empotrable dirigible halógena 50W c/transformadores electrónicos<br>MAGG</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250304_112511.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Contacto fotoeléctrico para fotocontrol suburbano<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_140202.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Lámpara de techo sobreponer c/balastro electrónico y foco 5W<br>MAGG</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_140509.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario de interior luz halógena empotrable 50W<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_140837.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario blanco de interior empotrable 50W<br>MAGG</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_141057.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Farol mérida soportado color chocolate 60W<br>MAGG</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_142000.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario decorativo de halógeno interior 40W<br>SOLARIS</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250228_142236.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Luminario de escalera rectangular blanco c/lámpara DS-7W<br>TECNOLITE</a>
+                </div>
+                <div class="product-item" data-category="iluminacion">
+                    <img src="{{ url_for('static', filename='iluminacion/IMG_20250304_112244.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Fotocontrol modelo 2021 1500W<br>TORK</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250227_140114.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Caja universal sobreponer PVC<br>RYMCO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250227_141236.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Cinta aislante eléctrica de vinil<br>3M</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250227_141434.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Soportes para lámpara fluorescente T8<br>RAWELT</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250227_141844.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Caja cuadrada de metal 4" profundidad de 1/2"<br>RYMCO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250227_142013.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Caja cuadrada de PVC 1/2" c/tapa<br>RYMCO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250227_142044.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Tapa cuadrada para caja de PVC 1/2"<br>RAWELT</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250227_142100.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Tapa cuadrada para caja de PVC 3/4"<br>RAWELT</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250227_142405.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Tapa cuadrada de metal 3/4"<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250227_142433.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Tapa cuadrada de metal 7/8"<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250227_142530.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Caja cuadrada de metal 4" profundidad de 1/8"<br>RAWELT</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/placa.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Placa para receptaculo sencillo industrial 36mm<br>ARROW HART</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250227_143254.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Interruptor de navaja 1 polo, 1 tiro 127V- 25A<br>IUSA</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/conector.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Conectores atornillables 22-10 AWG<br>GARDNER BENDER</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250227_143528.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa para apagador de palanca blanco<br>LEVITON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250227_143603.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa para apagador de palanca marfil<br>LEVITON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250227_143633.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa para apagador 2 ventanas blanco<br>LEVITON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250227_143715.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa para apagador de palanca cromado<br>LEVITON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250227_144044.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Contacto duplex polarizado c/tapa gris<br>ARROW HART</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250227_144437.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Interruptor de porcelana 2 polos, 1 tiro 25A<br>LEVITON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250227_150551.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Apagador sencillo visible cuadrado<br>SURTEK</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250228_130008.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Interruptor unipolar duplex conexión a tierra estándar marfil<br>EATON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250228_144818.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Elemento calefactor Malvis #20 <br>RONAHE</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='autoycontrol/IMG_20250304_124024.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Toma datos RJ-45 Cat 5E <br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='autoycontrol/IMG_20250304_124305.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Conector telefónico de 4 hilos<br>TOSCANA</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='autoycontrol/IMG_20250304_124401.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Atenuador de luz 127v-700W<br>MONTANA</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='autoycontrol/IMG_20250304_124523.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Módulo de plástico ciego 23,5mm<br>PROYECTA</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='autoycontrol/IMG_20250304_124726.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Conector para TV ABS<br>TOSCANA</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='autoycontrol/IMG_20250304_124927.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Atenuador de ventilador 36mm<br>PROYECTA</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='autoycontrol/IMG_20250304_125133.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Botón timbre de tecla 36mm<br>PROYECTA</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='autoycontrol/IMG_20250304_125314.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Conector telefónico de 4 hilos 36mm<br>MONTANA</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='autoycontrol/aire.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Extractor de aire axial 21W<br>IPSA</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250228_144924.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">LED indicador de panel rojo difuso 4.6"<br>EATON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/separador.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Separadores para piso y muros cerámicos<br>INDUSTRIAS CASTRO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250228_145204.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Conector socket base tipo chupon p/tubo T8, T12<br>LEVITON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250228_145300.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Socket para MR16 cuadrado<br>LEVITON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/fusible.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Fusible tipo americano varios amperajes<br>EATON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/coser.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Foco para máquina de coser 25W<br>RAWELT</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250228_145537.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Portabatería p/"AA"<br>ROYER</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250228_145626.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Arrancador plástico 20W<br>FULGORE</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250228_145717.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Arrancador FS-2 plástico 20W<br>SUPPLIER</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250228_145857.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Fusible de plástico automotriz varios colores<br>GENUINE</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_105335.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Socket para GU10 cerámina c/cable color blanco<br>ARROW HART</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_105625.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Contacto uso rudo industrial base de metal<br>ARROW HART</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_105702.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Clavija uso rudo industrial base de metal<br>ARROW HART</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_105900.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Apagador doble de palanca color marfil<br>COOPER</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_105913.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Interruptor-contacto estándar color marfil<br>COOPER</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_110318.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Broche para pila<br>ROYER</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_110628.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Conector para varilla 5/8"<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_110726.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Interruptor actuador de rueda de plástico 125VCA 3A<br>ROYER</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_110829.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Clavija de rosca pata de latón color negro<br>ROYER</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_111028.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Receptáculo plástico c/seguro empotrable marfil 20A, 250VCA<br>LEVITON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_111145.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Contacto duplex uso rudo, c/tierra aislada<br>LEVITON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_111455.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Receptáculo negro de nylon 4 polos, 4 alambres 30A<br>ARROW HART</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_112608.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa duplex para caja de conexión tipo FS<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_112655.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Clavija ovalada de rosca de latón color negro<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_112734.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa dúplex de policarbonato gris para exteriores<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_112913.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Clavija de PVC recta color amarillo 15A 125VCA<br>LEVITON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_113016.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Conector redondo amarillo 15A 125VCA, 2 polos, 3 cables<br>LEVITON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/porta.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Portalámpara de baquelita sencillo color negro<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/conector2.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Conector redondo negro 15A 125VCA, 2 polos, 3 cables<br>LEVITON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_114611.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa un módulo color marfil<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_114726.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa un módulo c/acabado madera caoba<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_114839.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa un módulo color plateado<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_115000.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa un módulo color blanco<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_115055.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa un módulo color negro<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_115217.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa un módulo color dorado<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_115349.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa una ventana color dorado<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_115451.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa una ventana color marfil<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_115611.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa dos módulos c/acabado madera caoba<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_115658.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa dos módulos color marfil<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_115749.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa dos módulos color negro<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_115837.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa dos módulos color dorado<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_115935.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa dos módulos color marfil<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_120022.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa dos módulos color plateado<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_120104.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa dos módulos color blanco<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_120257.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Aro de color cromado<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_120401.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa tres módulos color blanco<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/2pt.png') }}" alt="" loading="lazy">
+                    <a href="#">Contacto 2P+T color negro<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_120758.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Apagador de escalera un módulo color negro<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_120923.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Apagador de escalera un módulo color marfil<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_121150.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Contacto 2P+T color blanco<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_121229.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Contacto 2P+T color marfil<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_121413.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Apagador de módulo 4 vías color negro<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_121456.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Apagador de módulo 4 vías color marfil<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_121540.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Apagador de módulo 4 vías color blanco<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_121646.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Contacto 1.5 módulos color negro<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_121949.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Contacto 1.5 módulos color marfil<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_122142.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Contacto 1.5 módulos color blanco<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_122844.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Apagador de 1.5 módulos color negro<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_122940.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Apagador de 1.5 módulos color blanco<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_123137.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Apagador de 36mm escalera color negro<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_123238.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Apagador de 36mm escalera color marfil<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_123352.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Apagador de 36mm escalera color blanco<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_123525.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Apagador de 72mm escalera color negro<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_123743.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Apagador de 72mm escalera color marfil<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_123842.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Apagador de 36mm escalera color blanco<br>IGOTO</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_124216.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Botón timbre tecla de acero y cobre galvanizado<br>TOSCANA</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_124628.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Apagador sencillo color fosforescente<br>ROYER</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_124841.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Apagador escalera color fosforescente<br>ROYER</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_125226.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Interruptor sencillo de tecla 72mm<br>MONTANA</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_125409.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa de plástico cuatro ventanas color marfil<br>TOSCANA</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_125456.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa de plástico dos ventanas color marfil<br>TOSCANA</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_125541.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa de plástico una ventana color marfil<br>TOSCANA</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_125729.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Receptáculo duplex color marfil<br>LEON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_125805.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Clavija ovalada color negro<br>LEON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_125846.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa duplex color marfil<br>LEON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_125927.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Placa duplex color blanco<br>LEON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_125959.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Interruptor de paso pera chico color blanco<br>LEON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_130033.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Receptáculo triple sin pata ancho color marfil<br>LEON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='accesorios/IMG_20250304_130115.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Portalámpara reforzada varios colores<br>LEON</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='baja_media_tension/IMG_20250227_140534.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Centro de carga QOD2 con 1 fase, 3 hilos<br>SQUARE D</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='baja_media_tension/IMG_20250227_140748.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Centro de carga QOD con 2 fases, 3 hilos<br>SQUARE D</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='baja_media_tension/IMG_20250227_140748.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Interruptor de seguridad de servicio general 30A 240VCA<br>SQUARE D</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='baja_media_tension/IMG_20250227_141020.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Caja sencilla impermeable de una banda, tres salidas aluminio<br>BELL</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='baja_media_tension/IMG_20250227_141134.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Interruptor de seguridad de servicio general 3 polos<br>ROYER</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='baja_media_tension/IMG_20250304_114240.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Centro de carga para sobreponer 8 polos<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="accesorios">
+                    <img src="{{ url_for('static', filename='baja_media_tension/centro.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Centro de carga para sobreponer 6 polos<br>VOLTECK</a>
+                </div>
+                <div class="product-item" data-category="tube-poli">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/tubo-conduit.jpeg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Tubo conduit subterráneo no metálico<br>NEWCOND</a>
+                </div>
+                <div class="product-item" data-category="tube-poli">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/conduit.png') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Tubo conduit pared delgada sin cople<br>OMEGA</a>
+                </div>
+                <div class="product-item" data-category="tube-poli">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/poli.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Poliducto flexible capa interna lisa varias medidas<br>POLIFLEX</a>
+                </div>
+                <div class="product-item" data-category="tube-poli">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/imc.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Tubo conduit metálico tipo IMC varias medidas<br>RYMCO</a>
+                </div>
+                <div class="product-item" data-category="tube-poli">
+                    <img src="{{ url_for('static', filename='conductores/IMG_20250227_140054.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Caja FSC tipo FSC12 varias medidas<br>ANCLO</a>
+                </div>
+                <div class="product-item" data-category="tube-poli">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/flexi.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Tubería metálica flexible<br>ARGOS</a>
+                </div>
+                <div class="product-item" data-category="tube-poli">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/herme.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Tubo conduit metálico flexible hermético<br>RYMCO</a>
+                </div>
+                <div class="product-item" data-category="tube-poli">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/hermeno.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Tubo conduit no metálico flexible hermético<br>RYMCO</a>
+                </div>
+                <div class="product-item" data-category="tube-poli">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/IMG_20250227_142220.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Tubo para Conduit de PVC<br>RYMCO</a>
+                </div>
+                <div class="product-item" data-category="tube-poli">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/tubo.png') }}" alt="" loading="lazy">
+                    <a href="#">Tubería conduit PVC<br>POLIFLEX</a>
+                </div>
+                <div class="product-item" data-category="tube-poli">
+                    <img src="{{ url_for('static', filename='conductores/IMG_20250227_140137.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Condulet ovalado LB de aluminio varias medidas<br>NEWCOND</a>
+                </div>
+                <div class="product-item" data-category="tube-poli">
+                    <img src="{{ url_for('static', filename='conductores/IMG_20250227_140251.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Condulet ovalado T de aluminio varias medidas<br>NEWCOND</a>
+                </div>
+                <div class="product-item" data-category="tube-poli">
+                    <img src="{{ url_for('static', filename='conductores/IMG_20250227_140315.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Condulet ovalado LL de aluminio varias medidas<br>NEWCOND</a>
+                </div>
+                <div class="product-item" data-category="tube-poli">
+                    <img src="{{ url_for('static', filename='conductores/IMG_20250227_140440.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Condulet ovalado C de aluminio varias medidas<br>NEWCOND</a>
+                </div>
+                <div class="product-item" data-category="tube-poli">
+                    <img src="{{ url_for('static', filename='conductores/IMG_20250227_140625.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Condulet rectangular FS de aluminio varias medidas<br>NEWCOND</a>
+                </div>
+                <div class="product-item" data-category="tube-poli">
+                    <img src="{{ url_for('static', filename='conductores/IMG_20250304_113917.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Condulet ovalado E de aluminio varias medidas<br>NEWCOND</a>
+                </div>
+                <div class="product-item" data-category="tube-poli">
+                    <img src="{{ url_for('static', filename='conductores/IMG_20250304_114039.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Condulet ovalado T de aluminio varias medidas<br>NEWCOND</a>
+                </div>
+                <div class="product-item" data-category="auto-y-control">
+                    <img src="{{ url_for('static', filename='autoycontrol/contactor1.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Contactor 3 fases 80A bobina 220VCA<br>SCHNEIDER ELECTRIC</a>
+                </div>
+                <div class="product-item" data-category="auto-y-control">
+                    <img src="{{ url_for('static', filename='autoycontrol/contactor22.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Contactor 3 fases 50A bobina 220VCA<br>SCHNEIDER ELECTRIC</a>
+                </div>
+                <div class="product-item" data-category="auto-y-control">
+                    <img src="{{ url_for('static', filename='autoycontrol/contactor3.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Contactor 3 fases 32A bobina 220VCA<br>SCHNEIDER ELECTRIC</a>
+                </div>
+                <div class="product-item" data-category="auto-y-control">
+                    <img src="{{ url_for('static', filename='autoycontrol/contactorrever.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Contactor inversor 3 fases 9A bobina 24V CC, con enclavamiento eléctrico<br>SCHNEIDER
+                        ELECTRIC</a>
+                </div>
+                <div class="product-item" data-category="auto-y-control">
+                    <img src="{{ url_for('static', filename='autoycontrol/arrancador2.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Arrancador de motor manual 3 fases 20A 600VCA<br>SCHNEIDER ELECTRIC</a>
+                </div>
+                <div class="product-item" data-category="auto-y-control">
+                    <img src="{{ url_for('static', filename='autoycontrol/arrancador3.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Arrancador de motor magnético manual 3 fases 14A 690VCA<br>SCHNEIDER ELECTRIC</a>
+                </div>
+                <div class="product-item" data-category="auto-y-control">
+                    <img src="{{ url_for('static', filename='autoycontrol/arrancador4.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Arrancador de motor magnético manual 3 fases 32A 690VCA<br>SCHNEIDER ELECTRIC</a>
+                </div>
+                <div class="product-item" data-category="auto-y-control">
+                    <img src="{{ url_for('static', filename='autoycontrol/relevador.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Relevador para protección de motores tamaño S00 16A<br>SIEMENS</a>
+                </div>
+                <div class="product-item" data-category="auto-y-control">
+                    <img src="{{ url_for('static', filename='autoycontrol/relevador2.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Relevador para protección de motores tamaño S3 100A<br>SIEMENS</a>
+                </div>
+                <div class="product-item" data-category="auto-y-control">
+                    <img src="{{ url_for('static', filename='autoycontrol/relevador3.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Relevador para protección de motores tamaño S0 25A<br>SIEMENS</a>
+                </div>
+                <div class="product-item" data-category="auto-y-control">
+                    <img src="{{ url_for('static', filename='autoycontrol/relevador4.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Relevador de sobrecarga 3 polos 10A<br>SIEMENS</a>
+                </div>
+                <div class="product-item" data-category="auto-y-control">
+                    <img src="{{ url_for('static', filename='autoycontrol/relevador5.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Relevador de sobrecarga 3 polos 20A<br>SIEMENS</a>
+                </div>
+                <div class="product-item" data-category="auto-y-control">
+                    <img src="{{ url_for('static', filename='autoycontrol/relevador6.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Relevador de sobrecarga 3 polos 200A<br>SIEMENS</a>
+                </div>
+                <div class="product-item" data-category="auto-y-control">
+                    <img src="{{ url_for('static', filename='autoycontrol/termistor.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Relevador de protección de motor por termistor 230VCA<br>SIEMENS</a>
+                </div>
+                <div class="product-item" data-category="auto-y-control">
+                    <img src="{{ url_for('static', filename='autoycontrol/sistema.jpg') }}" alt="" loading="lazy">
+                    <a href="#">Sistema de administración de motor 690VCA 8A<br>TELEMECANIQUE</a>
+                </div>
+                <div class="product-item" data-category="auto-y-control">
+                    <img src="{{ url_for('static', filename='autoycontrol/arrancador5.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Arrancadores de motor en linea 3 fases 32A 690VCA<br>TELEMECANIQUE</a>
+                </div>
+                <div class="product-item" data-category="auto-y-control">
+                    <img src="{{ url_for('static', filename='autoycontrol/arrancadorsuave.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Arrancador suave 40HP 440VCA S2<br>SIEMENS</a>
+                </div>
+                <div class="product-item" data-category="auto-y-control">
+                    <img src="{{ url_for('static', filename='autoycontrol/arrancadorsuave2.PNG') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Arrancador suave 10HP 440VCA S0<br>SIEMENS</a>
+                </div>
+                <div class="product-item" data-category="auto-y-control">
+                    <img src="{{ url_for('static', filename='autoycontrol/arrancadorsuave3.PNG') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Arrancador suave S3 80A 45KW/480VCA<br>SIEMENS</a>
+                </div>
+                <div class="product-item" data-category="conductores">
+                    <img src="{{ url_for('static', filename='conductores/duplex.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable duplex STP blanco rollo/metro varios calibres<br>ARGOS</a>
+                </div>
+                <div class="product-item" data-category="conductores">
+                    <img src="{{ url_for('static', filename='tuberia y poliducto/coaxial.jpg') }}" alt=""
+                        loading="lazy">
+                    <a href="#">Cable coaxial RGE-06 77% rollo/metro<br>CABLETECH</a>
+                </div>
+                <div class="product-item" data-category="conductores">
+                    <img src="{{ url_for('static', filename='conductores/thwneg.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable THW-LS negro rollo/metro varios calibres<br>ARGOS</a>
+                </div>
+                <div class="product-item" data-category="conductores">
+                    <img src="{{ url_for('static', filename='conductores/thwver.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable THW-2-LS verde rollo/metro varios calibres<br>VIAKON</a>
+                </div>
+                <div class="product-item" data-category="conductores">
+                    <img src="{{ url_for('static', filename='conductores/thwneg.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable THW-2-LS negro rollo/metro varios calibres<br>CONDUCTORES ARSA</a>
+                </div>
+                <div class="product-item" data-category="conductores">
+                    <img src="{{ url_for('static', filename='conductores/thwblan.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable THW-2-LS blanco rollo/metro varios calibres<br>VIAKON</a>
+                </div>
+                <div class="product-item" data-category="conductores">
+                    <img src="{{ url_for('static', filename='conductores/thwrojo.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable THW-2-LS rojo rollo/metro varios calibres<br>CONDULAC</a>
+                </div>
+                <div class="product-item" data-category="conductores">
+                    <img src="{{ url_for('static', filename='conductores/thwazul.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable THW-2-LS azul rollo/metro varios calibres<br>CONDULAC</a>
+                </div>
+                <div class="product-item" data-category="conductores">
+                    <img src="{{ url_for('static', filename='conductores/thwblan.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable THW-LS blanco rollo/metro varios calibres<br>BELDEN</a>
+                </div>
+                <div class="product-item" data-category="conductores">
+                    <img src="{{ url_for('static', filename='conductores/thwver.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable THW-LS verde rollo/metro varios calibres<br>ARGOS</a>
+                </div>
+                <div class="product-item" data-category="conductores">
+                    <img src="{{ url_for('static', filename='conductores/thwrojo.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable THW-LS rojo rollo/metro varios calibres<br>BELDEN</a>
+                </div>
+                <div class="product-item" data-category="conductores">
+                    <img src="{{ url_for('static', filename='conductores/thwazul.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable THW-LS azul rollo/metro varios calibres<br>ARGOS</a>
+                </div>
+                <div class="product-item" data-category="conductores">
+                    <img src="{{ url_for('static', filename='conductores/usorudo.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable uso rudo ST 3 líneas rollo/metro varios calibres<br>CONDUMEX</a>
+                </div>
+                <div class="product-item" data-category="conductores">
+                    <img src="{{ url_for('static', filename='conductores/usorudo2.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable uso rudo ST 2 líneas rollo/metro varios calibres<br>ARGOS</a>
+                </div>
+                <div class="product-item" data-category="conductores">
+                    <img src="{{ url_for('static', filename='conductores/usorudo3.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable uso rudo ST 4 líneas rollo/metro varios calibres<br>CONDUMEX</a>
+                </div>
+                <div class="product-item" data-category="conductores">
+                    <img src="{{ url_for('static', filename='conductores/desnudo.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Cable de cobre desnudo rollo/metro varios calibres<br>KOBREX</a>
+                </div>
+                <div class="product-item" data-category="conductores">
+                    <img src="{{ url_for('static', filename='conductores/cobredesnudo.PNG') }}" alt="" loading="lazy">
+                    <a href="#">Alambre de cobre desnudo<br>KOBREX</a>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div id="carousel-container">
+        <p>¡Conoce nuestras marcas!</p>
+        <div class="carousel">
+            <img src="{{ url_for('static', filename='logos/ABB.png') }}" alt="Logotipo 1" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/bticino.jpg') }}" alt="Logotipo 2" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/himel.png') }}" alt="Logotipo 3" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/Eaton.png') }}" alt="Logotipo 4" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/Schneider.png') }}" alt="Logotipo 5" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/Estevez.png') }}" alt="Logotipo 6" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/arrow.png') }}" alt="Logotipo 7" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/WEG.png') }}" alt="Logotipo 8" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/anclo.png') }}" alt="Logotipo 9" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/royer.png') }}" alt="Logotipo 10" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/LEVITON.png') }}" alt="Logotipo 11" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/igesa.png') }}" alt="Logotipo 12" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/Simon.png') }}" alt="Logotipo 13" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/nitto.png') }}" alt="Logotipo 14" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/rAWELT.png') }}" alt="Logotipo 15" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/Tork.png') }}" alt="Logotipo 16" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/argos.png') }}" alt="Logotipo 17" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/Condumex.png') }}" alt="Logotipo 18" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/viakon.png') }}" alt="Logotipo 19" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/condulac.png') }}" alt="Logotipo 20" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/iusa.png') }}" alt="Logotipo 21" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/arsa.png') }}" alt="Logotipo 22" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/belden.png') }}" alt="Logotipo 23" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/condelmex.png') }}" alt="Logotipo 24" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/omega.png') }}" alt="Logotipo 25" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/deplayusa.png') }}" alt="Logotipo 26" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/tmf.jpg') }}" alt="Logotipo 27" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/poliflex.png') }}" alt="Logotipo 28" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/kobrex.png') }}" alt="Logotipo 29" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/jupiter.png') }}" alt="Logotipo 30" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/catusa.png') }}" alt="Logotipo 31" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/rymco.png') }}" alt="Logotipo 32" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/tecnolite.png') }}" alt="Logotipo 33" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/cooper.png') }}" alt="Logotipo 34" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/magg.png') }}" alt="Logotipo 35" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/megamex.png') }}" alt="Logotipo 36" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/elastimold.jpg') }}" alt="Logotipo 37" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/burndy.png') }}" alt="Logotipo 38" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/3m.png') }}" alt="Logotipo 39" class="carousel-item">
+            <img src="{{ url_for('static', filename='logos/telemecanique.png') }}" alt="Logotipo 40"
+                class="carousel-item">
+        </div>
+    </div>
+
+    <footer class="footer">
+        <ul class="social-icon">
+            <li class="icon-elem">
+                <a href="https://www.facebook.com/share/19Aa591CSg/" target="_blank" class="icon">
+                    <ion-icon name="logo-facebook"></ion-icon>
+                </a>
+            </li>
+            <li class="icon-elem">
+                <a href="https://wa.me/525519029501" target="_blank" class="icon">
+                    <ion-icon name="logo-whatsapp"></ion-icon>
+                </a>
+            </li>
+            <li class="icon-elem">
+                <a href="mailto:ventas@alcaditrade.com.mx" target="_blank" class="icon">
+                    <ion-icon name="mail-outline"></ion-icon>
+                </a>
+            </li>
+        </ul>
+
+        <ul class="menu">
+            <li class="menu-elem">
+                <a href="{{ url_for('index') }}" class="menu-icon">Inicio</a>
+            </li>
+            <li class="menu-elem">
+                <a href="{{ url_for('nosotros') }}" class="menu-icon">Acerca de nosotros</a>
+            </li>
+            <li class="menu-elem">
+                <a href="https://maps.app.goo.gl/opmEi8gtqCwXZvmg7" target="_blank" class="menu-icon">Ubicación</a>
+            </li>
+        </ul>
+
+        <p class="text">&copy; <span id="current-year"></span> &nbsp;&nbsp; Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        const minimizeBtn = document.getElementById('minimize-btn');
+        const chat = document.querySelector('.chat-container');
+        const inputArea = document.getElementById('chat-input');
+
+        let isMinimized = false;
+        minimizeBtn.addEventListener('click', () => {
+            if (!isMinimized) {
+                chat.style.display = 'none';
+                inputArea.style.display = 'none';
+                minimizeBtn.textContent = '+';
+            } else {
+                chat.style.display = 'block';
+                inputArea.style.display = 'flex'; // o 'block' si no usas flexbox
+                minimizeBtn.textContent = '–';
+            }
+            isMinimized = !isMinimized;
+        });
+    </script>
+
+    <button id="scrollToTopBtn" onclick="scrollToTop()">&#8593;</button>
+
+    <script>
+        const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 100) {
+                scrollToTopBtn.style.display = "flex";
+            } else {
+                scrollToTopBtn.style.display = "none";
+            }
+        });
+        scrollToTopBtn.addEventListener("click", () => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+    </script>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="/static/app.js" defer></script>
+</body>
+
+</html>
